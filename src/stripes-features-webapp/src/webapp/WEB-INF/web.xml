@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="my-web-app" version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>stripes features demo</display-name>
+
+	<!-- The HttpSessionListener interface is used to monitor when sessions 
+		are created and destroyed on the application server. Its best practical use 
+		would be to track session use statistics for a server. -->
+	<listener>
+		<description>Session Listener</description>
+		<display-name>Session Listener</display-name>
+		<listener-class>com.zeperdi.demo.webapp.SessionListener</listener-class>
+	</listener>
+
+	<!-- Is a interface which helps us to communicate with the servlet container. 
+		There is only one * ServletContext for the entire web application and the 
+		components of the web application can share it. The information * in the 
+		ServletContext will be common to all the components. -->
+	<listener>
+		<description>Context Listener</description>
+		<display-name>Context Listener</display-name>
+		<listener-class>com.zeperdi.demo.webapp.ContextListener</listener-class>
+	</listener>
+
+	<!-- A filter is an object that performs filtering tasks on either the request 
+		to a resource (a servlet or static content), or on the response from a resource, 
+		or both. Filters perform filtering in the doFilter method. Every Filter has 
+		access to a FilterConfig object from which it can obtain its initialization 
+		parameters, a reference to the ServletContext which it can use, for example, 
+		to load resources needed for filtering tasks. -->
+	<filter>
+		<filter-name>DemoFilter</filter-name>
+		<filter-class>com.zeperdi.demo.webapp.DemoFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+
+	<!-- In a web application, SiteMesh acts as a Servler Filter. It allows 
+		requests to be handled by the Servlet engine as normal, but the resulting 
+		HTML (referred to as the content) will be intercepted before being returned 
+		to the browser. -->
+	<filter>
+		<filter-name>sitemesh</filter-name>
+		<filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+	</filter>
+
+	<!-- The Stripes filter declaration -->
+	<filter>
+		<description>
+            Provides essential configuration and request processing services for the Stripes framework.
+        </description>
+		<filter-name>StripesFilter</filter-name>
+		<!-- The Stripes filter is used to ensure that all requests coming to a 
+			Stripes application are handled in the same way. It detects and wraps any 
+			requests that contain multipart/form data, so that they may be treated much 
+			like any other request. Also ensures that all downstream components have 
+			access to essential configuration and services whether the request goes through 
+			the dispatcher, or straight to a JSP. -->
+		<filter-class>net.sourceforge.stripes.controller.StripesFilter</filter-class>
+		<!-- About StripesSecurityFilter: http://www.stripesframework.org/display/stripes/Securing+Stripes+With+ACLs -->
+		<!--filter-class>net.sourceforge.stripes.security.controller.StripesSecurityFilter</filter-class -->
+
+		<!-- This tells Stripes which packages to use when looking for action beans. 
+			Indicate each package root—subpackages are automatically included, so do 
+			not use .* at the end of the package name. -->
+		<init-param>
+			<param-name>ActionResolver.Packages</param-name>
+			<param-value>com.zeperdi.demo.webapp.action</param-value>
+		</init-param>
+
+		<!-- This is the ActionBeanContext subclass to use instead of the default 
+			ActionBeanContext class. This is loaded by DefaultActionBeanContextFactory. 
+			Encapsulates information about the current request. Also provides access 
+			to the underlying Servlet API should you need to use it for any reason. -->
+		<init-param>
+			<param-name>ActionBeanContext.Class</param-name>
+			<param-value>com.zeperdi.demo.webapp.DemoActionBeanContext</param-value>
+		</init-param>
+
+		<!-- The Extension.Packages parameter works much like the ActionResolver. 
+			Packages, except that the package roots are for extensions instead of action 
+			beans. To indicate the packages for your extensions, give the Stripes filter 
+			a value for the Extension.Packages parameter -->
+		<init-param>
+			<param-name>Extension.Packages</param-name>
+			<param-value>com.zeperdi.demo.webapp.extensions</param-value>
+		</init-param>
+
+		<!-- This is the ExceptionHandler implementation. The default is DefaultExceptionHandler. 
+			An alternate implementation is also available, DelegatingExceptionHandler. 
+			You can define your own ExceptionHandler class. -->
+		<init-param>
+			<param-name>ExceptionHandler.Class</param-name>
+			<param-value>net.sourceforge.stripes.exception.DelegatingExceptionHandler</param-value>
+		</init-param>
+
+		<!-- ExceptionHandler.Class must be defined with DelegatingExceptionHandler. 
+			Each of those classes inside the package must implement AutoExceptionHandler. -->
+		<init-param>
+			<param-name>DelegatingExceptionHandler.Packages</param-name>
+			<param-value>com.zeperdi.demo.webapp.exceptions</param-value>
+		</init-param>
+
+		<!-- There are many ways to manage security so the SecurityManager was 
+			written as an interface which must be implemented using your own class and 
+			this is the class that is set using the SecurityManager.Class init parameter 
+			in the filter -->
+		<!--init-param> <param-name>SecurityManager.Class</param-name> <param-value>pt.example.stripes.MySecurityManager</param-value> 
+			</init-param -->
+
+		<!-- This is a comma-separated list of Interceptor implementations. Interceptors 
+			will be executed in the order that you list them, unlike extensionpackaged 
+			interceptors for which the order is not guaranteed. -->
+		<init-param>
+			<param-name>Interceptor.Classes</param-name>
+			<param-value>com.zeperdi.demo.webapp.interceptors.DemoInterceptor</param-value>
+		</init-param>
+
+		<!-- To avoid malicious users from causing harm to your web application 
+			by uploading extremely large files, Stripes imposes a default maximum size 
+			of 10MB. This is the total size of the request data, including all uploaded 
+			files, request parameters, request headers—everything. -->
+		<init-param>
+			<param-name>FileUpload.MaximumPostSize</param-name>
+			<param-value>10M</param-value>
+		</init-param>
+	</filter>
+
+	<!-- Servlet that controls how requests to the Stripes framework are processed. 
+		Uses an instance of the ActionResolver interface to locate the bean and method 
+		used to handle the current request and then delegates processing to the bean. -->
+	<servlet>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<servlet-class>net.sourceforge.stripes.controller.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- A mapping to make the Stripes filter intercept all requests that go 
+		through the dispatcher servlet -->
+	<filter-mapping>
+		<filter-name>StripesFilter</filter-name>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>sitemesh</filter-name>
+		<url-pattern>*.action</url-pattern>
+	</filter-mapping>
+
+	<!-- A mapping to make the DemoFilter filter intercept all requests that 
+		go through the dispatcher servlet -->
+	<filter-mapping>
+		<filter-name>DemoFilter</filter-name>
+		<url-pattern>*.action</url-pattern>
+	</filter-mapping>
+
+	<!-- A mapping that makes the dispatcher servlet handle all .action requests -->
+	<servlet-mapping>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<url-pattern>*.action</url-pattern>
+	</servlet-mapping>
+
+	<!-- This says to use index.jsp as a default file when the user accesses 
+		the application with the base URL, such as http://localhost:8080/ getting_started -->
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<!-- Java Authentication and Authorization Service, Form based Authentication -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Restricted</web-resource-name>
+			<url-pattern>*.action</url-pattern>
+			<url-pattern>*.jsp</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>demorole</role-name>
+		</auth-constraint>
+		<user-data-constraint>
+			<transport-guarantee>NONE</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+	
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Open</web-resource-name>
+			<url-pattern>/Login.action</url-pattern>
+			<url-pattern>/Error.action</url-pattern>
+		</web-resource-collection>
+		<user-data-constraint>
+			<transport-guarantee>NONE</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+	
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<realm-name>StripesDemoRealm</realm-name>
+		<form-login-config>
+			<form-login-page>/Login.action</form-login-page>
+			<form-error-page>/Login.action</form-error-page>
+		</form-login-config>
+	</login-config>
+</web-app>

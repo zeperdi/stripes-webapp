@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-web>
+    <security-domain>java:/jaas/StripesDemoRealm</security-domain>
+    <context-root>/stripes-demo</context-root>    
+</jboss-web>

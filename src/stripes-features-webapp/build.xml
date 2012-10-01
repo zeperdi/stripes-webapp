@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Stripes features demo" default="main" basedir=".">
+
+	<property file="../../build/build.properties" />
+	
+	<!-- var for project name -->
+	<property name="project.title" value="Stripes features demo" />
+	<!-- var for project version -->
+	<property name="project.version" value="1.0.0" />
+	<!-- var for jboss type -->
+	<property name="jboss.configuration" value="default" />
+    <!-- var for JBOSS deploy directory -->
+    <property name="jboss.deploy" value="${jboss.home}/server/${jboss.configuration}/deploy" />
+	<!-- var for sources directory -->
+	<property name="src.dir" value="src" />
+	<!-- var for resources directory -->
+	<property name="resources.dir" value="${src.dir}/resources" />
+	<!-- var for lib directory -->
+    <property name="lib.dir" value="../../lib/webapp-lib" />
+	<!-- var for shared lib directory -->
+    <property name="shared.lib.dir" value="../../lib/shared-lib" />	
+	<!-- var for build directory -->
+    <property name="build.dir" value="build" />
+	<!-- var for classes directory -->
+    <property name="classes.dir" value="${build.dir}/classes" />
+	<!-- var for deploy directory -->
+    <property name="deploy.dir" value="${build.dir}/deploy" />
+	<!-- var for webapp directory -->
+    <property name="webapp.dir" value="${src.dir}/webapp" />
+	<!-- var for WEB-INF directory -->
+    <property name="web-inf.dir" value="WEB-INF" />
+
+	<path id="classpath">
+	    <fileset dir="${lib.dir}" includes="**/*.jar"></fileset>
+		<fileset dir="${shared.lib.dir}" includes="**/*.jar"></fileset>
+	</path>
+	
+	<!-- Targets -->
+	<!-- main target -->
+	<target name="main" depends="clean,war" />
+	
+	<!-- cleans build folder -->
+	<target name="clean">
+		  <delete dir="${build.dir}" />
+	</target>
+	
+	<!-- compiles all project -->
+	<target name="compile" depends="clean">
+		<mkdir dir="${classes.dir}" />
+		<javac srcdir="src" destdir="${classes.dir}" debug="on" classpathref="classpath" />
+		<copy todir="${classes.dir}">
+			 <fileset dir="${resources.dir}" excludes="**/*.java" />
+		</copy>
+	</target>
+	
+	<!-- generates war file -->
+	<target name="war" depends="compile">
+		<mkdir dir="${deploy.dir}" />
+		<war destfile="${deploy.dir}/${webapp.file.war}" webxml="${webapp.dir}/${web-inf.dir}/web.xml">
+			<manifest />
+			<fileset dir="${webapp.dir}" />
+			<lib dir="${lib.dir}" />
+			<classes dir="${classes.dir}" />
+		</war>
+	</target>
+	
+	<!-- deploys war file -->
+	<target name="deploy-war" depends="clean,war">
+		<copy todir="${jboss.deploy}">
+			<fileset dir="${deploy.dir}" includes="${webapp.file.war}" />
+		</copy>
+	</target>
+	
+	<!-- deploys war file unpacked -->
+	<target name="deploy-war-unpacked" depends="war">
+	    <mkdir dir="${jboss.deploy}/${webapp.file.war}" />
+		<unjar src="${deploy.dir}/${webapp.file.war}" dest="${jboss.deploy}/${webapp.file.war}"></unjar>
+	</target>
+	
+	<!-- touches war file unpacked -->
+	<target name="touch-web-unpacked" depends="deploy-war-unpacked">
+		<touch file="${jboss.deploy}/${webapp.file.war}/${web-inf.dir}/web.xml" />
+	</target>
+	<!--
+	<target name="test" depends="compile">
+	    <junit printsummary="yes" haltonfailure="yes">
+	    	<formatter type="plain"/>
+	    	  <test name="pt.example.tests.TestUser"/>
+	    </junit>
+	</target>
+	-->
+</project>
+	

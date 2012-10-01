@@ -1,0 +1,115 @@
+/* General --------------------------------------- */
+div.clear {
+	clear: both;
+}
+
+div#wrapper {
+	border: #a0a0a0 solid 1px;
+	margin: 20px;
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-top: 12px;
+	padding-bottom: 30px;
+}
+
+div#menu {
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+div.msg {
+	border-style: solid;
+	padding: 8px;
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+
+div.success {
+	border-color: green;
+}
+
+div.error {
+	border-color: red;
+}
+/* Menu ------------------------------------------ */
+#button {
+	padding: 0;
+}
+
+#button li {
+	display: inline;
+}
+
+#button li a {
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	text-decoration: none;
+	float: left;
+	padding: 10px;
+	background-color: #2175bc;
+	color: #fff;
+}
+
+#button li a:hover {
+	background-color: #2586d7;
+}
+
+/* Form ------------------------------------------ */
+.req {
+	color: red;
+	font-size: 15px;
+	font-weight: bold;
+	margin: 0px 2px;
+}
+
+form ul li {
+	display: table;
+}
+
+/* Footer ------------------------------------------ */
+#footer {
+	margin: 0px;
+	padding: 0px;
+}
+
+#footer ul {
+	margin: 0px;
+	padding: 0px;
+}
+
+#footer ul#anchors_rigth {
+	float: right;
+}
+
+#footer ul#anchors_left {
+	float: left;
+}
+
+#footer ul li {
+	display: inline;
+}
+
+#footer li a {
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #2274AC;
+}
+
+#footer #anchors_left a {
+	padding-right: 10px;
+}
+
+#footer #anchors_rigth a {
+	padding-left: 10px;
+}
+
+#footer li a:hover {
+	color: gray;
+}
+
+ul.clear {
+	clear: both;
+}
